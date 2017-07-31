@@ -1,5 +1,6 @@
 # springboot-mybatis
 1.项目目前集成zk,mq,quartz,redis插件,配置文件在zk上,使用zkui图形界面进行配置
+
 1.启动zk
         E:\zookeeper-3.4.9\bin 下启动zkServer.cmd
 2.启动zkui图形界面用于配置插件参数
