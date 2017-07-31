@@ -1,11 +1,14 @@
 # springboot-mybatis
 1.项目目前集成zk,mq,quartz,redis插件,配置文件在zk上,使用zkui图形界面进行配置
+注：以下路径为本地路径，请根据实际情况进行修改
 
 1.启动zk
         E:\zookeeper-3.4.9\bin 下启动zkServer.cmd
+
 2.启动zkui图形界面用于配置插件参数
         E:\zkui  执行命令 Java -jar zkui-2.0-SNAPSHOT-jar-with-dependencies.jar
         访问路径:127.0.0.1:9090
+
 3.启动mq
         E:\Java\env\RabbitMQ Server\rabbitmq_server-3.6.9\sbin
         rabbitmq-service install 安装服务
