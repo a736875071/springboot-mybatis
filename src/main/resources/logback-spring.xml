@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="ServerIP" source="spring.cloud.client.ipAddress" defaultValue="0.0.0.0"/>
+    <springProperty scope="context" name="ServerPort" source="server.port" defaultValue="0000"/>
+    <springProperty scope="context" name="KafkaHost" source="logback.kafka.producer.broker.connect" defaultValue="0.0.0.0:9092"/>
+    <springProperty scope="context" name="LOG_HOME" source="logback.home" defaultValue="logs"/>
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+    <springProperty scope="context" name="LOG_FILENAME" source="logback.filename" defaultValue="${springAppName}"/>
+    <springProperty scope="context" name="LOG_FILESIZE" source="logback.filesize" defaultValue="50MB"/>
+    <springProperty scope="context" name="LOG_FILEMAXDAY" source="logback.filemaxday" defaultValue="15"/>
+
+    <!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${ServerIP}:${ServerPort}){magenta} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta}
+    %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
+    <property name="CONSOLE_LOG_PATTERN_NO_Color" value="%d{yyyy-MM-dd HH:mm:ss.SSS} ${ServerIP}:${ServerPort} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%15.15t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}" />
+
+    <!-- 控制台日志 -->
+    <appender name="StdoutAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!-- 按照每天生成常规日志文件 -->
+    <appender name="FileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${LOG_FILENAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_HOME}/${LOG_FILENAME}.%d{yyyy-MM-dd}.%i.gz
+            </fileNamePattern>
+            <!--保留时间,单位:天-->
+            <maxHistory>${LOG_FILEMAXDAY}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 10MB -->
+                <maxFileSize>${LOG_FILESIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN_NO_Color}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <!-- 将日志输出到Kafka -->
+    <!--<appender name="KafkaAppender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${CONSOLE_LOG_PATTERN_NO_Color}</pattern>
+            </layout>
+        </encoder>
+        <topic>epm-log</topic>
+        <keyingStrategy class="com.github.danielwegener.logback.kafka.keying.RoundRobinKeyingStrategy"/>
+        <deliveryStrategy class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+        &lt;!&ndash;<producerConfig>bootstrap.servers=192.168.1.11:9092</producerConfig>&ndash;&gt;
+        <producerConfig>bootstrap.servers=${KafkaHost}</producerConfig>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>-->
+
+    <!--TRACE DEBUG INFO WARN ERROR ALL OFF-->
+    <root level="INFO">
+        <appender-ref ref="StdoutAppender"/>
+        <!--
+        由于我们的Kafka服务器连接地址信息在zookeeper中,所以,root中不能使用KafkaAppender,
+        否则,就需要在启动应用时指定Kafka地址信息,如:&#45;&#45;(两个横杠)logback.kafka.producer.broker.connect=192.168.1.11:9092
+        同时,由于root中没有kafkaAppender,所以下面需要指定那个包的日志应该输出到kafka中。
+
+        说明:日志输出到kafka是为了配合日志易使用
+        -->
+        <!--<appender-ref ref="KafkaAppender"/>-->
+    </root>
+    <logger name="org" level="info" additivity="false">
+        <appender-ref ref="StdoutAppender"/>
+        <appender-ref ref="FileAppender"/>
+    </logger>
+
+    <logger name="com" level="info" additivity="false">
+        <appender-ref ref="StdoutAppender"/>
+        <appender-ref ref="FileAppender"/>
+        <!--<appender-ref ref="KafkaAppender"/>-->
+    </logger>
+    ${LOG_LOGGERS}
+
+</configuration>

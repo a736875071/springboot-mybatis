@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: springboot
+  profiles:
+      active: dev
+encrypt:
+  failOnError: false
