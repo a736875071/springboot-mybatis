@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +32,8 @@ public class AmqpConfig {
     private String username;
     @Value("${spring.rabbitmq.password}")
     private String password;
+    @Autowired
+    private RabbitMqService rabbitMqService;
 
     @Bean
     public ConnectionFactory connectionFactory() {
@@ -69,7 +72,8 @@ public class AmqpConfig {
 
     @Bean
     public Queue queue() {
-        return new Queue("spring-boot-queue", true); //队列持久
+        //队列持久，保证mq重启后未消费的消息一直存在
+        return new Queue("batchDeduction", true); //队列持久
 
     }
 
@@ -91,7 +95,10 @@ public class AmqpConfig {
             @Override
             public void onMessage(Message message, Channel channel) throws Exception {
                 byte[] body = message.getBody();
-                System.out.println("receive msg 11: " + new String(body));
+                System.out.println("receive msg : " + new String(body));
+                //具体调用方法,模拟生成环境调用
+                rabbitMqService.rabbitMqTest(new String(body));
+                //如果消费者不进行消息消费确认，消息会一直存在，阻塞队列其他消息执行
                 channel.basicAck(message.getMessageProperties().getDeliveryTag(), false); //确认消息成功消费
                 System.out.println("========================");
             }

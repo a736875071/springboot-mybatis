@@ -40,7 +40,7 @@ logging:
  1.导入eureka-service项目并启动
 
  2.直接将eureka-service项目打成jar，通过命令直接启动
- java -jar eureka-server-0.0.1-SNAPSHOT.jar --spring.config.location=F:\javaExam\bootstrap-release.yml
+ java -jar eureka-server-0.0.1-SNAPSHOT.jar --spring.config.location=D:\gitHome\bootstrap-release.yml
  其中：--spring.config.location=F:\javaExam\bootstrap-release.yml是配置文件路径，在启动jar时会读取这个配置文件，实现了动态配置
 
  注意：可能出现注册发现服务出现down情况,原因可能是mq或redis没有启动造成,启动即可

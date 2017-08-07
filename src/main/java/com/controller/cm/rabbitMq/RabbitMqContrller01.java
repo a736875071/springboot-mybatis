@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 
 @RestController
-@RequestMapping(value = "/rabbitmq")
 public class RabbitMqContrller01 {
     @Autowired
     private Send send;
 
-    @RequestMapping(value = "contract/direct", method = RequestMethod.GET)
+    @RequestMapping(value = "rabbitmq/contract/direct", method = RequestMethod.GET)
     public void contractDirect(String content) {
         for (int i = 0; i < 10; i++) {
-            send.sendMsg("ssss" + content + i);
+            send.sendMsg( content + i);
         }
     }
 
