@@ -87,6 +87,7 @@ public class AmqpConfig {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory());
         container.setQueues(queue());
         container.setExposeListenerChannel(true);
+        //根据实际生产环境修改（1时，如果不进行消息确认会阻塞其他消息执行）
         container.setMaxConcurrentConsumers(1);
         container.setConcurrentConsumers(1);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认
