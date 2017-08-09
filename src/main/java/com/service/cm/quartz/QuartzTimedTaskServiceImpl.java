@@ -26,8 +26,6 @@ public class QuartzTimedTaskServiceImpl implements QuartzTimedTaskService {
 
     @Autowired
     private AutoDeductionService autoDeductionService;
-    @Autowired
-    private QrtzCronTriggersService qrtzCronTriggersService;
 
     /**
      * 查询定时任务列表
@@ -41,25 +39,6 @@ public class QuartzTimedTaskServiceImpl implements QuartzTimedTaskService {
         return autoDeductionDtos;
     }
 
-    /**
-     * 通过id查询定时任务信息
-     *
-     * @param id id
-     * @return 查询结果
-     */
-    @Override
-    public QuartzTimedTaskDto getQuartzTimedTasksById(Long id) {
-        QrtzCronTriggers qrtzCronTriggers = qrtzCronTriggersService.selectByPrimaryKey(id);
-        QuartzTimedTaskDto quartzTimedTaskDto = new QuartzTimedTaskDto();
-        if (qrtzCronTriggers != null) {
-            AutoDeductionDto autoDeductionDto = autoDeductionService.getAutoDeductionById(qrtzCronTriggers.getId());
-            if (autoDeductionDto != null) {
-                BeanUtils.copyProperties(qrtzCronTriggers, quartzTimedTaskDto);
-                BeanUtils.copyProperties(autoDeductionDto, quartzTimedTaskDto);
-            }
-        }
-        return quartzTimedTaskDto;
-    }
 
     /**
      * 查询定时任务列表条数
@@ -87,10 +66,6 @@ public class QuartzTimedTaskServiceImpl implements QuartzTimedTaskService {
         qrtzCronTriggersCondition.setTriggerGroup(quartzTimedTaskDto.getTriggerGroup());
         qrtzCronTriggersCondition.setSchedName(quartzTimedTaskDto.getJobName());
         qrtzCronTriggersCondition.setTriggerName(quartzTimedTaskDto.getTriggerName());
-//        List<QrtzCronTriggersDto> qrtzCronTriggers = qrtzCronTriggersService.selectByCondition(qrtzCronTriggersCondition);
-//        if (qrtzCronTriggers != null && qrtzCronTriggers.size() != 0) {
-//            throw new MsgException("添加失败,原因:已存在相同的定时任务");
-//        }
         //添加记录信息
         Long id = UUIDUtil.genSequenceUUID();
         quartzTimedTaskDto.setId(id);
@@ -109,7 +84,6 @@ public class QuartzTimedTaskServiceImpl implements QuartzTimedTaskService {
         autoDeductionService.postAutoDeduction(autoDeductionDto);
         QrtzCronTriggersDto record = new QrtzCronTriggersDto();
         BeanUtils.copyProperties(quartzTimedTaskDto, record);
-//        qrtzCronTriggersService.insert(record);
         return quartzTimedTaskDto;
     }
 
@@ -122,15 +96,6 @@ public class QuartzTimedTaskServiceImpl implements QuartzTimedTaskService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public Long deleteQuartzTimedTasks(Long id) throws SchedulerException {
-        //查询定时任务记录信息
-//        QrtzCronTriggers qrtzCronTriggers = qrtzCronTriggersService.selectByPrimaryKey(id);
-//        if (qrtzCronTriggers == null) {
-//            throw new MsgException("删除失败,原因:未查询到相关定时任务信息");
-//        }
-//        //停止定时任务
-//        qrtzCronTriggersService.shutdownOneJob(qrtzCronTriggers.getId());
-//        //删除相关信息记录
-//        qrtzCronTriggersService.deleteByPrimaryKey(id);
         autoDeductionService.deleteAutoDeduction(id);
         return id;
     }

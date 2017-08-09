@@ -17,64 +17,6 @@ import java.util.List;
 public interface QrtzCronTriggersService {
 
     /**
-     * 通过id删除定时任务配置信息
-     *
-     * @param id 主键id
-     * @return
-     */
-    int deleteByPrimaryKey(Long id);
-
-    /**
-     * 修改定时任务配置信息
-     *
-     * @param record 定时任务配置信息
-     * @return 定时任务配置信息
-     */
-    int updateByPrimaryKeySelective(QrtzCronTriggers record);
-
-
-    /**
-     * 添加定时任务配置信息
-     *
-     * @param record 定时任务配置信息
-     * @return 定时任务配置信息
-     */
-    QrtzCronTriggersDto insert(QrtzCronTriggersDto record);
-
-    /**
-     * 条件查询定时任务配置信息
-     *
-     * @param qrtzCronTriggersCondition 查询条件
-     * @return 查询结果
-     */
-    List<QrtzCronTriggersDto> selectByCondition(QrtzCronTriggersCondition qrtzCronTriggersCondition);
-
-    /**
-     * 通过ID查询定时任务配置信息
-     *
-     * @param id id
-     * @return 查询结果
-     */
-    QrtzCronTriggers selectByPrimaryKey(Long id);
-
-
-    /**
-     * 通过id启动定时任务
-     *
-     * @param id 主键id
-     * @throws Exception
-     */
-    void startOneJob(Long id) throws MsgException, SchedulerException;
-
-    /**
-     * 通过id停止定时任务
-     *
-     * @param id 主键ID
-     * @return
-     */
-    void shutdownOneJob(Long id) throws SchedulerException;
-
-    /**
      * 停止所有定时任务
      *
      * @return

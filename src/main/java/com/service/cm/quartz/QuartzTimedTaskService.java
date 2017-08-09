@@ -24,13 +24,6 @@ public interface QuartzTimedTaskService {
      */
     List<QuartzTimedTaskDto> getQuartzTimedTasks(AutoDeductionCondition autoDeductionCondition);
 
-    /**
-     * 通过id查询定时任务信息
-     *
-     * @param id id
-     * @return 查询结果
-     */
-    QuartzTimedTaskDto getQuartzTimedTasksById(Long id);
 
     /**
      * 查询定时任务列表条数

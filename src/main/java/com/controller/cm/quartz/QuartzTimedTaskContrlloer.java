@@ -40,8 +40,6 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @RestController
 public class QuartzTimedTaskContrlloer {
     private static final Logger logger = LoggerFactory.getLogger(QuartzTimedTaskContrlloer.class);
-    //    @Autowired
-//    private QrtzCronTriggersService qrtzCronTriggersService;
     @Autowired
     private QuartzTimedTaskService quartzTimedTaskService;
     @Autowired
@@ -144,22 +142,6 @@ public class QuartzTimedTaskContrlloer {
         return null;
     }
 
-    /**
-     * 通过id查询定时任务信息
-     *
-     * @param id id
-     * @return 查询结果
-     */
-    @RequestMapping(value = "/epm/cm/quartz/getquartztimedtasks/{id}", method = RequestMethod.GET)
-    public Response<?> getQuartzTimedTasksById(@PathVariable Long id) {
-        logger.info(new LogMessage<>(UUID.randomUUID().toString(),
-                new EpmLogMessage("epm-cm-service",
-                        "quartz",
-                        "getQuartzTimedTasksById",
-                        "通过id查询定时任务信息")).toString());
-        QuartzTimedTaskDto quartzTimedTaskDtos = quartzTimedTaskService.getQuartzTimedTasksById(id);
-        return new Response<>().success(quartzTimedTaskDtos);
-    }
 
     /**
      * 添加一条定时任务记录
@@ -183,7 +165,7 @@ public class QuartzTimedTaskContrlloer {
             quartzTimedTaskDto.setTaskStatus(QuartzEnum.TaskStatus.OUTAGE.value());
 //            QuartzTimedTaskDto quartzTimedTask = quartzTimedTaskService.addQuartzTimedTasks(quartzTimedTaskDto);
             try {
-               String ip= IpUtils.getIp();
+                String ip = IpUtils.getIp();
                 redisService.set(quartzTimedTaskDto.getOrgId().toString(), ip);
                 startSchedule(quartzTimedTaskDto);
             } catch (Exception e) {

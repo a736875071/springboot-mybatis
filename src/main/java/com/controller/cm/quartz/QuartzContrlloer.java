@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,7 +57,7 @@ public class QuartzContrlloer {
         quartzProperties.setProperty("org.quartz.dataSource.quartzDataSource.URL", url);
         quartzProperties.setProperty("org.quartz.dataSource.quartzDataSource.user", username);
         quartzProperties.setProperty("org.quartz.dataSource.quartzDataSource.password", password);
-        StdSchedulerFactory stdSchedulerFactory=new StdSchedulerFactory();
+        StdSchedulerFactory stdSchedulerFactory = new StdSchedulerFactory();
         try {
             stdSchedulerFactory.initialize(quartzProperties);
         } catch (SchedulerException e) {
@@ -69,6 +68,7 @@ public class QuartzContrlloer {
 
     /**
      * 添加一条定时任务记录
+     * (ram存储)
      *
      * @param quartzTimedTaskDto 定时任务记录信息
      * @return 定时任务记录信息
@@ -110,6 +110,12 @@ public class QuartzContrlloer {
     }
 
 
+    /**
+     * ram存储添加定时任务
+     *
+     * @param quartzTimedTaskDto
+     * @throws ParseException
+     */
     public static void startSchedule(QuartzTimedTaskDto quartzTimedTaskDto) throws ParseException {
         try {
             // 1、创建一个JobDetail实例，指定Quartz
@@ -140,6 +146,12 @@ public class QuartzContrlloer {
     }
 
 
+    /**
+     * 删除数据库存储定时任务
+     *
+     * @param orgId 单位
+     * @throws ParseException
+     */
     @RequestMapping(value = "/epm/cm/quartz/delQuartzByOrgId", method = RequestMethod.GET)
     public void delQuartzByOrgId(Long orgId) throws ParseException {
         Scheduler scheduler = null;
@@ -156,6 +168,13 @@ public class QuartzContrlloer {
         }
     }
 
+    /**
+     * 添加一条定时任务
+     * （数据库存储）
+     *
+     * @param orgId 单位
+     * @throws ParseException
+     */
     @RequestMapping(value = "/epm/cm/quartz/postQuartzByOrgId", method = RequestMethod.POST)
     public void postQuartzByOrgId(Long orgId) throws ParseException {
 
@@ -181,6 +200,14 @@ public class QuartzContrlloer {
             e.printStackTrace();
         }
     }
+
+    /**
+     * 获取所有定时任务
+     *
+     * @param orgId
+     * @return
+     * @throws ParseException
+     */
     @RequestMapping(value = "/epm/cm/quartz/gets", method = RequestMethod.GET)
     public Response<?> quartzTimedTaskService(Long orgId) throws ParseException {
         List<QuartzTimedTaskDto> getQuartzTimedTasks = autoDeductionExtDao.selectAutoDeductionDto();
