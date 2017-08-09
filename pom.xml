@@ -70,7 +70,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <!--zookeeper-->
-           <dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-zookeeper-config</artifactId>
         </dependency>
