@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author YuanSongMing
- * @version 0.0.1
+ * @author YangQing
+ * @version 1.0.0
  */
 public class BeanUtils extends org.springframework.beans.BeanUtils {
     public static void copyPropertiesIgnoreNullValue(Object source, Object target, String... ignoreProperties)

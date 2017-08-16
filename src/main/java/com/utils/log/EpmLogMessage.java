@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * @author YuanSongMing
+ * @author YangQing
  * @version 1.0.0
  */
 public class EpmLogMessage {

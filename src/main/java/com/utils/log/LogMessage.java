@@ -6,8 +6,7 @@ import com.google.gson.GsonBuilder;
 /**
  * 日志基础类
  *
- * @author Dengzw
- * @author YuanSongMing
+ * @author YangQing
  * @version 1.0.0
  */
 public class LogMessage<T> {
