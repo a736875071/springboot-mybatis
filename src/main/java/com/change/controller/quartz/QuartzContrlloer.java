@@ -73,7 +73,7 @@ public class QuartzContrlloer {
      * @param quartzTimedTaskDto 定时任务记录信息
      * @return 定时任务记录信息
      */
-    @RequestMapping(value = "/epm/cm/quartz/postQuartz", method = RequestMethod.POST)
+    @RequestMapping(value = "/change/quartz/postQuartz", method = RequestMethod.POST)
     public Response<?> postQuartzTimedTasks(@Valid @RequestBody QuartzTimedTaskDto quartzTimedTaskDto, BindingResult result) {
         if (result.hasErrors()) {
             return new Response().failure(ValidateUtils.getValidateErrors(result.getAllErrors()));
@@ -152,7 +152,7 @@ public class QuartzContrlloer {
      * @param orgId 单位
      * @throws ParseException
      */
-    @RequestMapping(value = "/epm/cm/quartz/delQuartzByOrgId", method = RequestMethod.GET)
+    @RequestMapping(value = "/change/quartz/delQuartzByOrgId", method = RequestMethod.GET)
     public void delQuartzByOrgId(Long orgId) throws ParseException {
         Scheduler scheduler = null;
         try {
@@ -175,7 +175,7 @@ public class QuartzContrlloer {
      * @param orgId 单位
      * @throws ParseException
      */
-    @RequestMapping(value = "/epm/cm/quartz/postQuartzByOrgId", method = RequestMethod.POST)
+    @RequestMapping(value = "/change/quartz/postQuartzByOrgId", method = RequestMethod.POST)
     public void postQuartzByOrgId(Long orgId) throws ParseException {
 
         try {
@@ -208,7 +208,7 @@ public class QuartzContrlloer {
      * @return
      * @throws ParseException
      */
-    @RequestMapping(value = "/epm/cm/quartz/gets", method = RequestMethod.GET)
+    @RequestMapping(value = "/change/quartz/gets", method = RequestMethod.GET)
     public Response<?> quartzTimedTaskService(Long orgId) throws ParseException {
         List<QuartzTimedTaskDto> getQuartzTimedTasks = autoDeductionExtDao.selectAutoDeductionDto();
         return new Response<>().success(getQuartzTimedTasks);
